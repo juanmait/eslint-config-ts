@@ -7,4 +7,15 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## 0.0.1
 
+- upgrade dependencies
+  ```
+  @types/eslint                      ^8.4.1  →   ^8.4.2
+  @typescript-eslint/eslint-plugin  ^5.11.0  →  ^5.23.0
+  @typescript-eslint/parser         ^5.11.0  →  ^5.23.0
+  eslint                             ^8.8.0  →  ^8.15.0
+  eslint-config-prettier             ^8.3.0  →   ^8.5.0
+  eslint-plugin-import              ^2.25.4  →  ^2.26.0
+  prettier                           ^2.5.1  →   ^2.6.2
+  typescript                         ^4.5.5  →   ^4.6.4
+  ```
 - copy source from `eslint-config-monosvelte`
