@@ -12,6 +12,11 @@
   "author": "",
   "license": "ISC",
   "files": [],
+  "homepage": "https://github.com/juanmait/eslint-config-ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/juanmait/eslint-config-ts"
+  },
   "devDependencies": {
     "@types/eslint": "^8.4.2",
     "@typescript-eslint/eslint-plugin": "^5.23.0",
