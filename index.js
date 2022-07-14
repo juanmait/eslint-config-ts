@@ -65,6 +65,13 @@ module.exports = {
                  */
                 'prettier',
             ],
+            rules: {
+                // This rule is overwhelming and hides other more important typescript issues.
+                // Is usually trigger when you are returning something that resolves to `any` due
+                // to other typescript errors. In strict mode, typescript already shows the root causes
+                // of this issues and that is better than a vague report.
+                '@typescript-eslint/no-unsafe-return': 'off',
+            },
         },
         {
             files: ['*.cjs', '*.js'],
