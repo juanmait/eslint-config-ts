@@ -48,8 +48,7 @@ npm version minor
 # - commits this version bump
 # - creates a tag for the current release
 npm publish
-git push
-git push --tags
+git push && git push --tags
 ```
 
 ## Release Beta
