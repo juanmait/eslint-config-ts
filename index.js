@@ -28,8 +28,8 @@ const tsConfigExtends = [
      */
     'plugin:import/typescript',
     /**
-     * is our "recommended" config - it's just like eslint:recommended, except it only turns on
-     * rules from our TypeScript-specific plugin.
+     * "recommended" config for @typescript-eslint - it's just like eslint:recommended, except it only turns on
+     * rules from @typescript-eslint.
      */
     'plugin:@typescript-eslint/recommended',
     /**
