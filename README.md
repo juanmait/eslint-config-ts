@@ -1,5 +1,16 @@
 # eslint-config-ts
 
+
+  - [Install](#install)
+  - [Usage](#usage)
+  - [Releases](#releases)
+    - [Regular Releases](#regular-releases)
+    - [Beta Releases](#beta-releases)
+  - [Peer Dependencies](#peer-dependencies)
+  - [Dependency changelogs](#dependency-changelogs)
+
+## Install
+
 ```bash
 npm install @cubostuff/eslint-config-ts
 ```
@@ -33,7 +44,9 @@ module.exports = {
 };
 ```
 
-## Release
+## Releases
+
+### Regular Releases
 
 Make sure to check this links:
 
@@ -47,16 +60,18 @@ npm version minor
 # - increments the version your package.json based on the type of the change
 # - commits this version bump
 # - creates a tag for the current release
+
 npm publish
 git push && git push --tags
 ```
 
-## Release Beta
+### Beta Releases
 
 ```bash
 npm version 1.0.0-beta.1
 # - bump package version
 # - creates a git tag
+
 npm publish --tag beta
 git push
 git push --tags
@@ -76,5 +91,8 @@ git push --tags
 
 ## Dependency changelogs
 
--   https://github.com/typescript-eslint/typescript-eslint/blob/main/CHANGELOG.md
--   https://github.com/eslint/eslint/blob/main/CHANGELOG.md
+Be aware of breaking changes when upgrading dependencies. Check the links bellow:
+
+-   [typescript-eslint](https://github.com/typescript-eslint/typescript-eslint/blob/main/CHANGELOG.md)
+-   [eslint](https://github.com/eslint/eslint/blob/main/CHANGELOG.md)
+-   [eslint-plugin-jest](https://github.com/jest-community/eslint-plugin-jest/blob/main/CHANGELOG.md)
