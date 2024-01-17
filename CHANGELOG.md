@@ -7,6 +7,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 
+## [1.0.0-beta.3] - 2023-01-17
+
+-   Fix wrong peer dependencies versions
+
 ## [1.0.0-beta.2] - 2023-01-17
 
 -   replacement of `eslint-plugin-eslint-comments` by
