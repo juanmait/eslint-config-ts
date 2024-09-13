@@ -7,6 +7,21 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 
+## [1.2.0] - 2024-08-13
+
+-   upgrade dependencies
+    ```
+    @eslint-community/eslint-plugin-eslint-comments   ^4.1.0  →   ^4.4.0
+    @types/eslint                                    ^8.56.2  →   ^8.56.12
+    @typescript-eslint/eslint-plugin                 ^6.19.0  →   ^8.5.0
+    @typescript-eslint/parser                        ^6.19.0  →   ^8.5.0
+    eslint                                           ^8.56.0  →  ^8.57.0
+    eslint-plugin-import                             ^2.29.1  →  ^2.30.0
+    eslint-plugin-jest                               ^27.6.3  →  ^28.8.3
+    prettier                                          ^3.2.4  →   ^3.3.3
+    typescript                                        ^5.3.3  →   ^5.6.2
+    ```
+
 ## [1.0.0-beta.3] - 2023-01-17
 
 -   Fix wrong peer dependencies versions
