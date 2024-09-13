@@ -1,6 +1,6 @@
 {
     "name": "@cubostuff/eslint-config-ts",
-    "version": "1.0.0-beta.3",
+    "version": "1.0.0",
     "description": "An eslint config (yet another) for typescript",
     "main": "index.js",
     "scripts": {
