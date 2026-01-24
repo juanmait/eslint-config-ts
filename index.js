@@ -1,57 +1,11 @@
-/**
- * @type {import('eslint').Linter.BaseConfig['extends']}
- */
-const tsConfigExtends = [
-    /**
-     * ESLint's builtin "recommended" config - it turns on a small, sensible set of rules which
-     * lint for well-known best-practices.
-     */
-    'eslint:recommended',
-    /**
-     * This plugin intends to support linting of ES2015+ (ES6+) import/export syntax, and
-     * prevent issues with misspelling of file paths and import names.
-     * For typescript it relies on `eslint-import-resolver-typescript` bellow.
-     *
-     * Check [here](https://www.npmjs.com/package/eslint-plugin-import#settings) for
-     * more settings to resolve problems with resolving imports.
-     */
-    'plugin:import/recommended',
-    /**
-     * This plugin adds TypeScript support to eslint-plugin-import.
-     *
-     * - import/require files with extension .ts/.tsx!
-     * - Use paths defined in tsconfig.json.
-     * - Prefer resolve @types/* definitions over plain .js.
-     * - Multiple tsconfigs support just like normal.
-     *
-     * See extra configs [here](https://github.com/alexgorbatchev/eslint-import-resolver-typescript#configuration)
-     */
-    'plugin:import/typescript',
-    /**
-     * "recommended" config for @typescript-eslint - it's just like eslint:recommended, except it only turns on
-     * rules from @typescript-eslint.
-     */
-    'plugin:@typescript-eslint/recommended',
-    /**
-     * Check [Linting with Type Information](https://typescript-eslint.io/docs/linting/type-linting/).
-     * Contains rules that specifically require type information.
-     */
-    'plugin:@typescript-eslint/recommended-requiring-type-checking',
-    /**
-     * Apply best practices on directive comments such as `// eslint-disable`
-     * - to disallow unused disabling.
-     * - to disallow non-effect enabling.
-     * - to require rule IDs for disabling and enabling.
-     */
-    'plugin:eslint-comments/recommended',
-    /**
-     * eslint-config-prettier ensure ESLint doesn't report on formatting issues that prettier will fix.
-     * - check [here](https://typescript-eslint.io/docs/linting/linting#prettier)
-     * - check [here](https://prettier.io/docs/en/install.html#eslint-and-other-linters)
-     * - check [here](https://prettier.io/docs/en/integrating-with-linters.html)
-     */
-    'prettier',
-];
+const js = require('@eslint/js');
+const { defineConfig } = require('eslint/config');
+const tseslint = require('typescript-eslint');
+const importX = require('eslint-plugin-import-x');
+const jest = require('eslint-plugin-jest');
+const eslintComments = require('@eslint-community/eslint-plugin-eslint-comments');
+const prettier = require('eslint-config-prettier/flat');
+const globals = require('globals');
 
 const tsRules = {
     // This rule is overwhelming and hides other more important typescript issues.
@@ -61,59 +15,108 @@ const tsRules = {
     '@typescript-eslint/no-unsafe-return': 'off',
 };
 
-/**
- * @type {import('eslint').Linter.Config}
- */
-module.exports = {
-    env: {
-        es6: true,
-    },
-    overrides: [
-        {
-            files: ['*.ts'],
-            parser: '@typescript-eslint/parser',
-            plugins: ['@typescript-eslint'],
-            parserOptions: {
-                ecmaVersion: 2019,
-                sourceType: 'module',
-            },
-            extends: tsConfigExtends,
-            rules: tsRules,
-        },
-        {
-            files: ['*.test.ts'],
-            env: {
-                node: true,
-                browser: false,
-                es6: true,
-                'jest/globals': true,
-            },
-            parser: '@typescript-eslint/parser',
-            plugins: ['@typescript-eslint', 'jest'],
-            parserOptions: {
-                ecmaVersion: 2019,
-                sourceType: 'module',
-            },
-            extends: tsConfigExtends.concat(['plugin:jest/recommended']),
-            rules: tsRules,
-        },
-        {
-            files: ['*.cjs', '*.js'],
-            env: {
-                node: true,
-                browser: false,
-                es6: true,
-            },
-            parserOptions: {
-                ecmaVersion: 'latest',
-                sourceType: 'module',
-            },
-            extends: [
-                'eslint:recommended',
-                'plugin:import/recommended',
-                'plugin:eslint-comments/recommended',
-                'prettier',
-            ],
-        },
-    ],
+// eslint-comments plugin rules (plugin doesn't have flat config yet)
+const eslintCommentsRules = {
+    '@eslint-community/eslint-comments/disable-enable-pair': 'error',
+    '@eslint-community/eslint-comments/no-aggregating-enable': 'error',
+    '@eslint-community/eslint-comments/no-duplicate-disable': 'error',
+    '@eslint-community/eslint-comments/no-unlimited-disable': 'error',
+    '@eslint-community/eslint-comments/no-unused-enable': 'error',
 };
+
+/**
+ * Shareable ESLint flat config for TypeScript projects.
+ *
+ * This config provides:
+ * - TypeScript-specific linting rules
+ * - Import/export validation (using eslint-plugin-import-x)
+ * - Jest testing support
+ * - Prettier integration for code formatting
+ * - ESLint directive comment best practices
+ *
+ * @type {import('eslint').Linter.Config[]}
+ */
+module.exports = [
+    // Base ESLint recommended rules
+    js.configs.recommended,
+
+    // TypeScript files configuration - using defineConfig with extends
+    ...defineConfig({
+        files: ['**/*.ts', '**/*.tsx'],
+        extends: [tseslint.configs.recommended, tseslint.configs.recommendedTypeChecked],
+        languageOptions: {
+            parserOptions: {
+                projectService: true,
+                tsconfigRootDir: process.cwd(),
+            },
+            globals: {
+                // ES6/ES2015 globals (replaces env: { es6: true })
+                ...globals.es2015,
+            },
+        },
+        rules: tsRules,
+    }),
+
+    // Import plugin for TypeScript
+    {
+        files: ['**/*.ts', '**/*.tsx'],
+        ...importX.flatConfigs.recommended,
+        ...importX.flatConfigs.typescript,
+    },
+
+    // ESLint comments plugin for TypeScript
+    {
+        files: ['**/*.ts', '**/*.tsx'],
+        plugins: {
+            '@eslint-community/eslint-comments': eslintComments,
+        },
+        rules: eslintCommentsRules,
+    },
+
+    // TypeScript test files configuration (*.test.ts, *.spec.ts)
+    {
+        files: ['**/*.test.ts', '**/*.spec.ts', '**/*.test.tsx', '**/*.spec.tsx'],
+        ...jest.configs['flat/recommended'],
+        languageOptions: {
+            globals: {
+                ...globals.node,
+            },
+        },
+    },
+
+    // Disable type-checked rules for JavaScript files
+    {
+        files: ['**/*.js', '**/*.cjs', '**/*.mjs'],
+        ...tseslint.configs.disableTypeChecked,
+        rules: {
+            // Allow require() in JavaScript/CommonJS files
+            '@typescript-eslint/no-require-imports': 'off',
+        },
+    },
+
+    // JavaScript/CommonJS files configuration
+    {
+        files: ['**/*.js', '**/*.cjs', '**/*.mjs'],
+        ...importX.flatConfigs.recommended,
+        languageOptions: {
+            ecmaVersion: 'latest',
+            sourceType: 'module',
+            globals: {
+                ...globals.node,
+                ...globals.es2015,
+            },
+        },
+    },
+
+    // ESLint comments plugin for JavaScript
+    {
+        files: ['**/*.js', '**/*.cjs', '**/*.mjs'],
+        plugins: {
+            '@eslint-community/eslint-comments': eslintComments,
+        },
+        rules: eslintCommentsRules,
+    },
+
+    // Prettier must be last to override any formatting rules
+    prettier,
+];

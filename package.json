@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "format": "npx prettier --write .",
-        "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+        "lint": "eslint .",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "keywords": [],
@@ -19,26 +19,31 @@
     },
     "devDependencies": {
         "@eslint-community/eslint-plugin-eslint-comments": "^4.4.0",
-        "@types/eslint": "^8.56.12",
+        "@eslint/js": "^9.0.0",
+        "@types/eslint": "^9.0.0",
         "@typescript-eslint/eslint-plugin": "^8.5.0",
         "@typescript-eslint/parser": "^8.5.0",
-        "eslint": "^8.57.0",
-        "eslint-config-prettier": "^9.1.0",
-        "eslint-plugin-import": "^2.30.0",
-        "eslint-plugin-jest": "^28.8.3",
+        "eslint": "^9.0.0",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-import-x": "^4.0.0",
+        "eslint-plugin-jest": "^29.12.1",
+        "globals": "^17.0.0",
         "prettier": "^3.3.3",
-        "typescript": "^5.6.2"
+        "typescript": "^5.6.2",
+        "typescript-eslint": "^8.53.1"
     },
     "peerDependencies": {
         "@eslint-community/eslint-plugin-eslint-comments": ">=4.1.0 < 5",
-        "@types/eslint": "=>8.4.1 < 9",
-        "@typescript-eslint/eslint-plugin": "=>6.19.0 < 9",
-        "@typescript-eslint/parser": ">=6.19.0 < 9",
-        "eslint": ">=8.6.0 < 9",
-        "eslint-config-prettier": ">=9.1.0 < 10",
-        "eslint-plugin-import": ">=2.25.4 < 3",
-        "eslint-plugin-jest": ">=27.6.3 < 29",
+        "@eslint/js": ">=9.0.0 < 10",
+        "@types/eslint": ">=9.0.0 < 10",
+        "@typescript-eslint/eslint-plugin": ">=8.0.0 < 9",
+        "@typescript-eslint/parser": ">=8.0.0 < 9",
+        "eslint": ">=9.0.0 < 10",
+        "eslint-config-prettier": ">=10.1.8 < 11",
+        "eslint-plugin-import-x": ">=4.0.0 < 5",
+        "eslint-plugin-jest": ">=29.12.1 < 29.13.x",
         "prettier": ">=3.2.4 < 4",
-        "typescript": ">=5.3.3 < 6"
+        "typescript": ">=5.3.3 < 6",
+        "typescript-eslint": "^8.53.1"
     }
 }

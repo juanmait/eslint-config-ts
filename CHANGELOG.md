@@ -7,6 +7,129 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 
+## [2.0.0] - 2026-01-22
+
+### Changed
+
+**BREAKING CHANGES - Migration to ESLint 9 and Flat Config**
+
+-   **Migrated to ESLint 9** with flat config format (`eslint.config.js`)
+    -   Requires ESLint `>=9.0.0 < 10`
+    -   Configuration now uses flat config format (array of config objects)
+    -   Removed support for legacy `.eslintrc.*` format
+    -   `.eslintignore` files no longer supported; use `ignores` property in config
+    -   Requires Node.js `>=18.18.0`
+
+-   **Replaced `eslint-plugin-import` with `eslint-plugin-import-x`**
+    -   Better ESLint 9 and flat config support
+    -   Drop-in replacement with same rules
+    -   Full TypeScript support with flat config
+
+-   **Updated TypeScript configuration**
+    -   Now uses `typescript-eslint` package (combines parser and plugin)
+    -   Updated to use `projectService` instead of `project` for better performance
+    -   TypeScript rules properly scoped to `**/*.ts` and `**/*.tsx` files only
+    -   JavaScript files explicitly exclude type-checked rules
+
+-   **Simplified lint script**
+    -   Removed `--ext` flag from lint command (no longer needed with flat config)
+    -   Changed from: `"eslint . --ext .js,.jsx,.ts,.tsx"`
+    -   Changed to: `"eslint ."`
+
+-   **Updated dependencies**
+    ```
+    @eslint/js                                             NEW   →  ^9.0.0
+    @types/eslint                                        ^8.56.12  →  ^9.0.0
+    @typescript-eslint/eslint-plugin                      ^8.5.0  →  ^8.0.0
+    @typescript-eslint/parser                             ^8.5.0  →  ^8.0.0
+    eslint                                               ^8.57.0  →  ^9.0.0
+    eslint-plugin-import                                  ^2.30.0  →  REMOVED
+    eslint-plugin-import-x                                  NEW   →  ^4.0.0
+    eslint-plugin-jest                                    ^28.8.3  →  ^28.0.0
+    globals                                                 NEW   →  ^17.0.0
+    typescript-eslint                                       NEW   →  ^8.0.0
+    ```
+
+-   **Updated peer dependencies**
+    ```
+    @eslint/js                                              NEW   →  >=9.0.0 < 10
+    @types/eslint                                      >=8.4.1 < 9  →  >=9.0.0 < 10
+    @typescript-eslint/eslint-plugin                  >=6.19.0 < 9  →  >=8.0.0 < 9
+    @typescript-eslint/parser                         >=6.19.0 < 9  →  >=8.0.0 < 9
+    eslint                                             >=8.6.0 < 9  →  >=9.0.0 < 10
+    eslint-plugin-import                              >=2.25.4 < 3  →  REMOVED
+    eslint-plugin-import-x                                  NEW   →  >=4.0.0 < 5
+    eslint-plugin-jest                                >=27.6.3 < 29  →  >=28.0.0 < 29
+    typescript-eslint                                       NEW   →  ^8.53.1
+    ```
+
+### Migration Guide for Consumers
+
+Users of this config will need to:
+
+1. **Update ESLint and related packages** to version 9:
+   ```bash
+   npm install --save-dev \
+     eslint@^9.0.0 \
+     @eslint/js@^9.0.0 \
+     @types/eslint@^9.0.0 \
+     @typescript-eslint/eslint-plugin@^8.0.0 \
+     @typescript-eslint/parser@^8.0.0 \
+     typescript-eslint@^8.0.0 \
+     eslint-plugin-import-x@^4.0.0 \
+     eslint-plugin-jest@^28.0.0 \
+     globals@^17.0.0 \
+     eslint-config-prettier@^9.1.0
+   ```
+
+   And remove the old `eslint-plugin-import`:
+   ```bash
+   npm uninstall eslint-plugin-import
+   ```
+
+2. **Convert `.eslintrc.{js,cjs,json}` to `eslint.config.js`**:
+   ```javascript
+   // Old: .eslintrc.cjs
+   module.exports = {
+       root: true,
+       extends: '@cubostuff/eslint-config-ts',
+       parserOptions: {
+           project: ['./tsconfig.json'],
+           tsconfigRootDir: __dirname,
+       },
+   };
+
+   // New: eslint.config.js
+   const baseConfig = require('@cubostuff/eslint-config-ts');
+
+   module.exports = [
+       ...baseConfig,
+       // Your custom overrides here
+   ];
+   ```
+
+3. **Migrate `.eslintignore` patterns** into `eslint.config.js`:
+   ```javascript
+   module.exports = [
+       {
+           ignores: ['dist/**', 'build/**', 'node_modules/**'],
+       },
+       ...baseConfig,
+   ];
+   ```
+
+4. **Update package.json scripts** (remove `--ext` flag):
+   ```json
+   {
+       "scripts": {
+-          "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
++          "lint": "eslint ."
+       }
+   }
+   ```
+
+   ESLint 9 flat config automatically detects file types based on the `files` patterns in your configuration, so the `--ext` flag is no longer needed.
+
 ## [1.2.0] - 2024-09-13
 
 ### Changed
