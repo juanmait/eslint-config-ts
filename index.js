@@ -1,18 +1,21 @@
 const js = require('@eslint/js');
 const { defineConfig } = require('eslint/config');
 const tseslint = require('typescript-eslint');
+const tseslintPlugin = require('@typescript-eslint/eslint-plugin');
 const importX = require('eslint-plugin-import-x');
 const jest = require('eslint-plugin-jest');
 const eslintComments = require('@eslint-community/eslint-plugin-eslint-comments');
 const prettier = require('eslint-config-prettier/flat');
 const globals = require('globals');
 
+const tsParser = require('@typescript-eslint/parser');
 const tsRules = {
     // This rule is overwhelming and hides other more important typescript issues.
     // Is usually trigger when you are returning something that resolves to `any` due
     // to other typescript errors. In strict mode, typescript already shows the root causes
     // of this issues and that is better than a vague report.
     '@typescript-eslint/no-unsafe-return': 'off',
+    '@typescript-eslint/consistent-type-imports': 'error',
 };
 
 // eslint-comments plugin rules (plugin doesn't have flat config yet)
@@ -40,11 +43,21 @@ module.exports = [
     // Base ESLint recommended rules
     js.configs.recommended,
 
-    // TypeScript files configuration - using defineConfig with extends
+    // TypeScript files configuration - consolidated
     ...defineConfig({
         files: ['**/*.ts', '**/*.tsx'],
-        extends: [tseslint.configs.recommended, tseslint.configs.recommendedTypeChecked],
+        extends: [
+            tseslint.configs.recommended,
+            tseslint.configs.recommendedTypeChecked,
+            importX.flatConfigs.recommended,
+            importX.flatConfigs.typescript,
+        ],
+        plugins: {
+            '@typescript-eslint': tseslintPlugin,
+            '@eslint-community/eslint-comments': eslintComments,
+        },
         languageOptions: {
+            parser: tsParser,
             parserOptions: {
                 projectService: true,
                 tsconfigRootDir: process.cwd(),
@@ -54,24 +67,11 @@ module.exports = [
                 ...globals.es2015,
             },
         },
-        rules: tsRules,
-    }),
-
-    // Import plugin for TypeScript
-    {
-        files: ['**/*.ts', '**/*.tsx'],
-        ...importX.flatConfigs.recommended,
-        ...importX.flatConfigs.typescript,
-    },
-
-    // ESLint comments plugin for TypeScript
-    {
-        files: ['**/*.ts', '**/*.tsx'],
-        plugins: {
-            '@eslint-community/eslint-comments': eslintComments,
+        rules: {
+            ...tsRules,
+            ...eslintCommentsRules,
         },
-        rules: eslintCommentsRules,
-    },
+    }),
 
     // TypeScript test files configuration (*.test.ts, *.spec.ts)
     {
@@ -84,20 +84,14 @@ module.exports = [
         },
     },
 
-    // Disable type-checked rules for JavaScript files
+    // JavaScript/CommonJS files configuration - consolidated
     {
         files: ['**/*.js', '**/*.cjs', '**/*.mjs'],
         ...tseslint.configs.disableTypeChecked,
-        rules: {
-            // Allow require() in JavaScript/CommonJS files
-            '@typescript-eslint/no-require-imports': 'off',
-        },
-    },
-
-    // JavaScript/CommonJS files configuration
-    {
-        files: ['**/*.js', '**/*.cjs', '**/*.mjs'],
         ...importX.flatConfigs.recommended,
+        plugins: {
+            '@eslint-community/eslint-comments': eslintComments,
+        },
         languageOptions: {
             ecmaVersion: 'latest',
             sourceType: 'module',
@@ -106,15 +100,11 @@ module.exports = [
                 ...globals.es2015,
             },
         },
-    },
-
-    // ESLint comments plugin for JavaScript
-    {
-        files: ['**/*.js', '**/*.cjs', '**/*.mjs'],
-        plugins: {
-            '@eslint-community/eslint-comments': eslintComments,
+        rules: {
+            // Allow require() in JavaScript/CommonJS files
+            '@typescript-eslint/no-require-imports': 'off',
+            ...eslintCommentsRules,
         },
-        rules: eslintCommentsRules,
     },
 
     // Prettier must be last to override any formatting rules

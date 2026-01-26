@@ -35,6 +35,7 @@ npm install --save-dev \
   @typescript-eslint/eslint-plugin@^8.0.0 \
   @typescript-eslint/parser@^8.0.0 \
   typescript-eslint@^8.0.0 \
+  eslint-import-resolver-typescript@^4.0.0 \
   eslint-plugin-import-x@^4.0.0 \
   eslint-plugin-jest@^28.0.0 \
   eslint-config-prettier@^9.1.0 \
@@ -160,6 +161,7 @@ All peer dependencies must be installed manually:
 - `@typescript-eslint/parser` - TypeScript parser for ESLint
 - `eslint` - Core linting engine (>=9.0.0)
 - `eslint-config-prettier` - Disables conflicting formatting rules
+- `eslint-import-resolver-typescript` - TypeScript import resolver (required for import-x plugin)
 - `eslint-plugin-import-x` - Import/export validation
 - `eslint-plugin-jest` - Jest testing rules
 - `globals` - Environment-specific globals
